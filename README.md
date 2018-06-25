@@ -31,7 +31,7 @@ with the given CDN
 You can use it the same way you use
 [markdown-loader](https://github.com/peerigon/markdown-loader#usage).
 
-Usage with `vue-loader` and the new `@vue/cli` are added.
+Usage with `vue-loader` and the new `@vue/cli` are described too.
 
 ### Webpack 2+
 

@@ -1,6 +1,6 @@
 {
   "name": "markdown-latex-loader",
-  "version": "4.0.0",
+  "version": "0.0.0-alpha",
   "description": "Markdown loader which also compile LaTeX for webpack",
   "main": "index.js",
   "scripts": {
