@@ -1,81 +1,108 @@
-markdown-loader
-===============
+markdown-latex-loader
+=====================
 
-markdown-loader for webpack using [marked](https://github.com/chjj/marked).
+> This project is a fork of
+[markdown-loader](https://github.com/peerigon/markdown-loader)
 
-[![](https://img.shields.io/npm/v/markdown-loader.svg)](https://www.npmjs.com/package/markdown-loader)
-[![](https://img.shields.io/npm/dm/markdown-loader.svg)](https://www.npmjs.com/package/markdown-loader)
-[![Dependency Status](https://david-dm.org/peerigon/markdown-loader.svg)](https://david-dm.org/peerigon/markdown-loader)
-[![Build Status](https://travis-ci.org/peerigon/markdown-loader.svg?branch=master)](https://travis-ci.org/peerigon/markdown-loader)
+markdown-latex-loader is a plugin for webpack which will render LaTeX and
+Markdown in HTML.
+
+It will first render LaTeX functions in `$..$` or `$$..$$` symbols with
+[KaTeX](https://khan.github.io/KaTeX/)
+
+And then it will render Markdown with [marked](https://github.com/chjj/marked).
 
 ## Installation
 
-`npm install markdown-loader`
+```bash
+npm i -D markdown-latex-loader
+```
 
-## [Changelog](CHANGELOG.md) 
+KaTeX require a CSS files and several fonts. The easiest way to include them is
+with the given CDN
+
+```html
+<!-- template.html -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" integrity="sha384-9tPv11A+glH/on/wEu99NVwDPwkMQESOocs/ZGXPoIiLE8MU/qkqUcZ3zzL+6DuH" crossorigin="anonymous">
+```
 
 ## Usage
 
-Since marked's output is HTML, it's best served in conjunction with the [html-loader](https://github.com/webpack/html-loader).
+You can use it the same way you use
+[markdown-loader](https://github.com/peerigon/markdown-loader#usage).
+
+Usage with `vue-loader` and the new `@vue/cli` are added.
 
 ### Webpack 2+
 
 ```javascript
+// webpack.config.js
 {
     module: {
-        rules: [{
+        rules: [
+            {
                 test: /\.md$/,
                 use: [
-                    {
-                        loader: "html-loader"
-                    },
-                    {
-                        loader: "markdown-loader",
-                        options: {
-                            /* your options here */
-                        }
-                    }
+                    { loader: "html-loader" },
+                    { loader: "markdown-latex-loader" }
                 ]
-            }]
+            }
+        ]
     }
 }
 ```
 
-### Options
-
-Pass your marked [options](https://marked.js.org/#/USING_ADVANCED.md#options) as shown above.
-In order to specify [custom renderers](https://github.com/peerigon/markdown-loader/issues/5), set the `options.renderer`-option in your webpack config.
+### vue-loader
 
 ```javascript
 // webpack.config.js
-
-const marked = require("marked");
-const renderer = new marked.Renderer();
-
-return {
+{
     module: {
-        rules: [{
-                test: /\.md$/,
+        rules: [
+            {
+                test: /\.(md|markdown|markdown-latex)$/,
                 use: [
                     {
-                        loader: "html-loader"
-                    },
-                    {
-                        loader: "markdown-loader",
+                        loader: "markdown-latex-loader",
                         options: {
-                            pedantic: true,
-                            renderer
+                            div: true
                         }
                     }
                 ]
-            }]
+            }
+        ]
     }
 }
 ```
-## License
 
-MIT (http://www.opensource.org/licenses/mit-license.php)
+```html
+<!-- Component.vue -->
+<template lang="markdown-latex">
+  # This is Markdown in vue
 
-## Sponsors
+  How cool is **that** ?
 
-[<img src="https://assets.peerigon.com/peerigon/logo/peerigon-logo-flat-spinat.png" width="150" />](https://peerigon.com)
+  Plus, because I'm soooo cool, you can write formula, inline like $x^3$ or in block like this:
+
+  $$x = x_0 + \cfrac{1}{a_1 + 3} $$
+</template>
+```
+
+### Vue CLI
+
+```javascript
+// vue.config.js
+module.exports = {
+    chainWebpack: config => {
+        config.module
+          .rule('markdown-latex')
+          .test(/\.(md|markdown|markdown-latex)$/)
+          .use('markdown-latex-loader')
+            .loader('markdown-latex-loader')
+            .tap(options => { return {div: true} })
+            .end()
+      }
+    }
+```
+
+`Component.vue`: Same as [vue-loader](#vue-loader)
