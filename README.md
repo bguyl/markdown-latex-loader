@@ -106,3 +106,12 @@ module.exports = {
 ```
 
 `Component.vue`: Same as [vue-loader](#vue-loader)
+
+
+## Options
+
+You can use the [markded](https://marked.js.org/#/USING_ADVANCED.md) options.
+
+Option | Values
+-------|-------------------------------------------------------------
+div    | If `true`, the HTML code will be embeded in a single `<div>`
